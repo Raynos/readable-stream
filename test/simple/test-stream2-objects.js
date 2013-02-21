@@ -100,6 +100,39 @@ test('can read objects from stream', function(t) {
   t.end();
 });
 
+
+test('high water mark respected with push', function (t) {
+  var count = 99;
+  var list = [];
+  for (var i = 0; i < count; i++) {
+    list.push(i);
+  }
+
+  var s = Readable({
+    objectMode: true
+    , highWaterMark: 100
+  });
+
+  s._read = function () {
+    var bools = list.map(function (i) {
+      return s.push(i);
+    });
+
+    assert.ok(bools.every(function (x) {
+      return x === true;
+    }));
+
+    var needMore = s.push(100);
+    // IS ACTUALLY TRUE ;_; because s.needReadable is set
+    assert.equal(needMore, false, 'pushing over the hwm does not return false');
+
+    console.log("s", s._readableState)
+    t.end();
+  };
+
+  s.read(0);
+});
+
 test('can pipe objects into stream', function(t) {
   var r = fromArray([{ one: '1'}, { two: '2' }]);
 
