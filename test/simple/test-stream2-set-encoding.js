@@ -76,12 +76,12 @@ TestReader.prototype._read = function(n, cb) {
   setTimeout(function() {
 
     if (this.pos >= this.len) {
-      return cb();
+      return cb(null, null);
     }
 
     n = Math.min(n, this.len - this.pos);
     if (n <= 0) {
-      return cb();
+      return cb(null, null);
     }
 
     this.pos += n;
