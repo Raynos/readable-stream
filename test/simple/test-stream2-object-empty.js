@@ -11,6 +11,11 @@ s._read = function (n, cb) {
 };
 
 var v = s.read(0);
+s.push()
+assert.equal(v, null);
+
+var v = s.read(0);
+
 assert.equal(v, null);
 
 s.once("end", function () {
